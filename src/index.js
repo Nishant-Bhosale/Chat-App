@@ -11,8 +11,14 @@ const io = socketio(server);
 
 app.use(express.static(publicDirectoryPath));
 
-io.on("connection", () => {
-	console.log("New webSocket Connection detected");
+let count = 0;
+
+io.on("connection", (socket) => {
+	socket.emit("updatedCount", count);
+	socket.on("increment", () => {
+		count++;
+		io.emit("updatedCount", count);
+	});
 });
 
 server.listen(port, () => {
