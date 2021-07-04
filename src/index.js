@@ -11,13 +11,15 @@ const io = socketio(server);
 
 app.use(express.static(publicDirectoryPath));
 
-let count = 0;
-
 io.on("connection", (socket) => {
-	socket.emit("updatedCount", count);
-	socket.on("increment", () => {
-		count++;
-		io.emit("updatedCount", count);
+	// socket.emit("updatedCount", count);
+	// socket.on("increment", () => {
+	// 	count++;
+	// 	io.emit("updatedCount", count);
+	// });
+	socket.emit("welcomeMessage", "hey new User");
+	socket.on("sendMessage", (message) => {
+		io.emit("welcomeMessage", message);
 	});
 });
 
