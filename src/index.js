@@ -17,9 +17,17 @@ io.on("connection", (socket) => {
 	// 	count++;
 	// 	io.emit("updatedCount", count);
 	// });
-	socket.emit("welcomeMessage", "hey new User");
+
+	socket.emit("message", "Hey new User");
+
+	socket.broadcast.emit("message", "A new user has joined");
+
 	socket.on("sendMessage", (message) => {
-		io.emit("welcomeMessage", message);
+		io.emit("message", message);
+	});
+
+	socket.on("disconnect", () => {
+		io.emit("message", "A user has left");
 	});
 });
 

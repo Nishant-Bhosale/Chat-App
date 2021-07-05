@@ -16,3 +16,7 @@ submitButton.addEventListener("click", () => {
 socket.on("welcomeMessage", (message) => {
 	console.log(message);
 });
+
+socket.on("message", (message) => {
+	console.log(message);
+});
