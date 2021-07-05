@@ -10,7 +10,12 @@ const sendLocationBtn = document.querySelector("#send-location");
 submitButton.addEventListener("click", () => {
 	// console.log("Clicked");
 
-	socket.emit("sendMessage", inputText.value);
+	socket.emit("sendMessage", inputText.value, (error) => {
+		if (error) {
+			return console.log(error);
+		}
+		console.log("The message has been delivered.");
+	});
 });
 
 sendLocationBtn.addEventListener("click", () => {
@@ -22,7 +27,10 @@ sendLocationBtn.addEventListener("click", () => {
 	navigator.geolocation.getCurrentPosition((location) => {
 		locationObj.latitude = location.coords.latitude;
 		locationObj.longitude = location.coords.longitude;
-		socket.emit("sendLocation", locationObj);
+		socket.emit("sendLocation", locationObj, (message) => {
+			console.log("Your message has been delivered successfully");
+			console.log(message);
+		});
 	});
 });
 
