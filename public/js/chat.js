@@ -8,13 +8,16 @@ const sendLocationBtn = document.querySelector("#send-location");
 // });
 
 submitButton.addEventListener("click", () => {
-	// console.log("Clicked");
+	submitButton.setAttribute("disabled", "disabled");
 
 	socket.emit("sendMessage", inputText.value, (error) => {
+		submitButton.removeAttribute("disabled");
+		inputText.value = "";
+		inputText.focus();
 		if (error) {
 			return console.log(error);
 		}
-		console.log("The message has been delivered.");
+		// console.log("The message has been delivered.");
 	});
 });
 
@@ -23,12 +26,16 @@ sendLocationBtn.addEventListener("click", () => {
 		return alert("Geolocation API is not supported.");
 	}
 
+	sendLocationBtn.setAttribute("disabled", "disabled");
+
 	let locationObj = { latitude: null, longitude: null };
 	navigator.geolocation.getCurrentPosition((location) => {
 		locationObj.latitude = location.coords.latitude;
 		locationObj.longitude = location.coords.longitude;
+
 		socket.emit("sendLocation", locationObj, (message) => {
-			console.log("Your message has been delivered successfully");
+			// console.log("Your message has been delivered successfully");
+			sendLocationBtn.removeAttribute("disabled");
 			console.log(message);
 		});
 	});
