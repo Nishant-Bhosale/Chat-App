@@ -9,6 +9,7 @@ const port = process.env.PORT || 3000;
 const publicDirectoryPath = path.join(__dirname, "../public");
 const server = http.createServer(app);
 const io = socketio(server);
+const { generateMessages } = require("./utils/messages");
 
 app.use(express.static(publicDirectoryPath));
 
@@ -19,16 +20,16 @@ io.on("connection", (socket) => {
 	// 	io.emit("updatedCount", count);
 	// });
 
-	socket.emit("message", "Hey new User");
+	socket.emit("message", generateMessages("Hey New User!"));
 
-	socket.broadcast.emit("message", "A new user has joined");
+	socket.broadcast.emit("message", generateMessages("A new user has joined"));
 
 	socket.on("sendMessage", (message, callback) => {
 		const filter = new Filter();
 		if (filter.isProfane(message)) {
 			return callback("Please use good words");
 		}
-		io.emit("message", message);
+		io.emit("message", generateMessages(message));
 		callback();
 	});
 
@@ -41,7 +42,7 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("disconnect", () => {
-		io.emit("message", "A user has left");
+		io.emit("message", generateMessages("A user has left"));
 	});
 });
 
