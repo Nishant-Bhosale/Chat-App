@@ -3,9 +3,9 @@ const socket = io();
 const submitButton = document.querySelector("#submit");
 const inputText = document.querySelector("#client-message");
 const sendLocationBtn = document.querySelector("#send-location");
-// socket.on("updatedCount", (count) => {
-// 	console.log("The count is ", count);
-// });
+const messages = document.querySelector("#messages");
+const messageTemplate = document.querySelector("#message-template").innerHTML;
+const locationTemplate = document.querySelector("#location-template").innerHTML;
 
 submitButton.addEventListener("click", () => {
 	submitButton.setAttribute("disabled", "disabled");
@@ -17,7 +17,6 @@ submitButton.addEventListener("click", () => {
 		if (error) {
 			return console.log(error);
 		}
-		// console.log("The message has been delivered.");
 	});
 });
 
@@ -34,17 +33,22 @@ sendLocationBtn.addEventListener("click", () => {
 		locationObj.longitude = location.coords.longitude;
 
 		socket.emit("sendLocation", locationObj, (message) => {
-			// console.log("Your message has been delivered successfully");
 			sendLocationBtn.removeAttribute("disabled");
 			console.log(message);
 		});
 	});
 });
 
-socket.on("welcomeMessage", (message) => {
-	console.log(message);
+socket.on("message", (message) => {
+	const html = Mustache.render(messageTemplate, {
+		message,
+	});
+	messages.insertAdjacentHTML("beforeend", html);
 });
 
-socket.on("message", (message) => {
-	console.log(message);
+socket.on("locationMessage", (url) => {
+	const html = Mustache.render(locationTemplate, {
+		url,
+	});
+	messages.insertAdjacentHTML("beforeend", html);
 });
