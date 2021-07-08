@@ -36,10 +36,28 @@ const removeUser = (id) => {
 	}
 };
 
-// addUser({ id: 3, username: "Nishant", room: "roomname" });
-// addUser();
+const getUser = (id) => {
+	const user = users.find((user) => {
+		return user.id === id;
+	});
 
-// removeUser(3);
-const res = addUser({ id: 5, username: "", room: "" });
-console.log(users);
-console.log(res);
+	if (!user) {
+		return {
+			error: "User not found.",
+		};
+	}
+
+	return user;
+};
+
+const getUsersInRoom = (room) => {
+	room = room.trim().toLowerCase();
+	return users.filter((user) => user.room === room);
+};
+
+module.exports = {
+	addUser,
+	removeUser,
+	getUser,
+	getUsersInRoom,
+};
