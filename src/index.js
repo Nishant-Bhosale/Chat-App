@@ -23,9 +23,13 @@ io.on("connection", (socket) => {
 	// 	io.emit("updatedCount", count);
 	// });
 
-	socket.emit("message", generateMessages("Hey New User!"));
-
-	socket.broadcast.emit("message", generateMessages("A new user has joined"));
+	socket.on("join", ({ username, room }) => {
+		socket.join(room);
+		socket.emit("message", generateMessages("Hey New User!"));
+		socket.broadcast
+			.to(room)
+			.emit("message", generateMessages(`${username} has joined`));
+	});
 
 	socket.on("sendMessage", (message, callback) => {
 		const filter = new Filter();
