@@ -4,22 +4,53 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>Chat App</title>
+		<link rel="icon" href="./img/favicon.png" />
+		<link rel="stylesheet" href="./css/styles.css" />
 	</head>
 	<body>
-		<h1>Chat-App</h1>
-		<div id="messages"></div>
-		<input type="text" id="client-message" />
-		<button id="submit">Submit</button>
-		<button id="send-location">Send Location</button>
+		<div class="chat">
+			<div class="chat__sidebar"></div>
+			<div class="chat__main">
+				<div id="messages"></div>
+				<div class="compose">
+					<form id="message-form">
+						<input
+							type="text"
+							id="client-message"
+							placeholder="Enter your message"
+						/>
+						<button id="submit">Submit</button>
+						<button id="send-location">Send Location</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
 		<script id="message-template" type="type/html">
-			<div>
-				<p>{{createdAt}}-{{message}}</p>
+			<div class="message">
+				<p>
+					<span class="message__name">
+						Some User Name
+					</span>
+					<span class="message__meta">
+						{{createdAt}}
+					</span>
+				</p>
+				<p>{{message}}</p>
 			</div>
 		</script>
 
 		<script id="location-template" type="type/html">
-			<div>
+			<div class="message">
+				<p>
+					<span class="message__name">
+						Some User Name
+					</span>
+					<span class="message__meta">
+						{{createdAt}}
+					</span>
+				</p>
 				<p>
 					<a href="{{ url }}" target="_blank">My Current Location</a>
 				</p>

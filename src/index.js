@@ -9,7 +9,10 @@ const port = process.env.PORT || 3000;
 const publicDirectoryPath = path.join(__dirname, "../public");
 const server = http.createServer(app);
 const io = socketio(server);
-const { generateMessages } = require("./utils/messages");
+const {
+	generateMessages,
+	generateLocationMessage,
+} = require("./utils/messages");
 
 app.use(express.static(publicDirectoryPath));
 
@@ -29,6 +32,8 @@ io.on("connection", (socket) => {
 		if (filter.isProfane(message)) {
 			return callback("Please use good words");
 		}
+		console.log(message);
+		console.log(generateMessages(message));
 		io.emit("message", generateMessages(message));
 		callback();
 	});
@@ -36,7 +41,9 @@ io.on("connection", (socket) => {
 	socket.on("sendLocation", (location, callback) => {
 		io.emit(
 			"locationMessage",
-			`https://google.com/maps?q=${location.latitude},${location.longitude}`,
+			generateLocationMessage(
+				`https://google.com/maps?q=${location.latitude},${location.longitude}`,
+			),
 		);
 		callback("Location Shared!");
 	});

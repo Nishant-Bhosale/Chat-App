@@ -11,6 +11,7 @@ submitButton.addEventListener("click", () => {
 	submitButton.setAttribute("disabled", "disabled");
 
 	socket.emit("sendMessage", inputText.value, (error) => {
+		console.log(inputText.value);
 		submitButton.removeAttribute("disabled");
 		inputText.value = "";
 		inputText.focus();
@@ -49,7 +50,8 @@ socket.on("message", (message) => {
 
 socket.on("locationMessage", (url) => {
 	const html = Mustache.render(locationTemplate, {
-		url,
+		url: url.url,
+		createdAt: moment(url.createdAt).format("h:mm a"),
 	});
 	messages.insertAdjacentHTML("beforeend", html);
 });
