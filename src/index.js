@@ -42,12 +42,15 @@ io.on("connection", (socket) => {
 			.to(user.room)
 			.emit("message", generateMessages(`${user.username} has joined`));
 
+		io.to(user.room).emit("roomData", {
+			room: user.room,
+			users: getUsersInRoom(user.room),
+		});
 		callback();
 	});
 
 	socket.on("sendMessage", (message, callback) => {
 		const user = getUser(socket.id);
-
 		const filter = new Filter();
 
 		if (filter.isProfane(message)) {
@@ -76,6 +79,10 @@ io.on("connection", (socket) => {
 
 		if (user) {
 			io.emit("message", generateMessages("Admin", "A user has left"));
+			io.to(user.room).emit("roomData", {
+				room: user.room,
+				users: getUsersInRoom(user.room),
+			});
 		}
 	});
 });
