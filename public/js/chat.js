@@ -11,8 +11,6 @@ const { username, room } = Qs.parse(location.search, {
 	ignoreQueryPrefix: true,
 });
 
-// console.log(Qs.parse(location.search, { ignoreQueryPrefix: true }));
-
 submitButton.addEventListener("click", () => {
 	submitButton.setAttribute("disabled", "disabled");
 
@@ -22,7 +20,7 @@ submitButton.addEventListener("click", () => {
 		inputText.value = "";
 		inputText.focus();
 		if (error) {
-			return console.log(error);
+			alert(error);
 		}
 	});
 });
@@ -39,29 +37,34 @@ sendLocationBtn.addEventListener("click", () => {
 		locationObj.latitude = location.coords.latitude;
 		locationObj.longitude = location.coords.longitude;
 
-		socket.emit("sendLocation", locationObj, (message) => {
+		socket.emit("sendLocation", locationObj, () => {
 			sendLocationBtn.removeAttribute("disabled");
-			console.log(message);
 		});
 	});
 });
 
-socket.on("message", (message) => {
+socket.on("message", (messageInfo) => {
 	const html = Mustache.render(messageTemplate, {
-		username: username,
-		message: message.text,
-		createdAt: moment(message.createdAt).format("h:mm a"),
+		username: messageInfo.username,
+		message: messageInfo.text,
+		createdAt: moment(messageInfo.createdAt).format("h:mm a"),
 	});
 	console.log(username);
 	messages.insertAdjacentHTML("beforeend", html);
 });
 
-socket.on("locationMessage", (url) => {
+socket.on("locationMessage", (locationInfo) => {
 	const html = Mustache.render(locationTemplate, {
-		url: url.url,
-		createdAt: moment(url.createdAt).format("h:mm a"),
+		username: locationInfo.username,
+		url: locationInfo.url,
+		createdAt: moment(locationInfo.createdAt).format("h:mm a"),
 	});
 	messages.insertAdjacentHTML("beforeend", html);
 });
 
-socket.emit("join", { username, room });
+socket.emit("join", { username, room }, (error) => {
+	if (error) {
+		alert(error);
+		location.href = "/";
+	}
+});
