@@ -4,6 +4,7 @@ const submitButton = document.querySelector("#submit");
 const inputText = document.querySelector("#client-message");
 const sendLocationBtn = document.querySelector("#send-location");
 const messages = document.querySelector("#messages");
+const messageForm = document.querySelector("#message-form");
 const messageTemplate = document.querySelector("#message-template").innerHTML;
 const locationTemplate = document.querySelector("#location-template").innerHTML;
 const sidebarTemplate = document.querySelector("#sidebar-template").innerHTML;
@@ -42,10 +43,14 @@ socket.on("roomData", ({ room, users }) => {
 	document.querySelector("#sidebar").innerHTML = html;
 });
 
-submitButton.addEventListener("click", () => {
+messageForm.addEventListener("submit", (e) => {
+	e.preventDefault();
+
 	submitButton.setAttribute("disabled", "disabled");
 
-	socket.emit("sendMessage", inputText.value, (error) => {
+	const message = e.target.elements.message.value;
+
+	socket.emit("sendMessage", message, (error) => {
 		console.log(inputText.value);
 		submitButton.removeAttribute("disabled");
 		inputText.value = "";
